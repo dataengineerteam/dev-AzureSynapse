@@ -181,7 +181,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8f083d86-856c-4784-a9d8-5a7530ecd40a"
+						"spark.autotune.trackingId": "3d6f7b9f-4dc0-4f4b-9b9e-1793f871f7e2"
 					}
 				},
 				"metadata": {
@@ -219,7 +219,7 @@
 							"df = spark.read.format('csv').option('inferSchema',True).option('header',True).load('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/employees.csv')"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -228,7 +228,32 @@
 							"df.show(truncate=False)"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"df.write.mode('overwrite').saveAsTable('tblEmployee')"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\n",
+							"\n",
+							"select * from tblEmployee;"
+						],
+						"outputs": [],
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
