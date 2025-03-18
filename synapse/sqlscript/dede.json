@@ -1,0 +1,17 @@
+{
+	"name": "dede",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [dbo].[tblEmployee]\n(\n    empID nvarchar(218),\n    empName nvarchar(218),\n    salary nvarchar(218),\n    dep nvarchar(218)\n)\nWITH\n(\n    DISTRIBUTION = ROUND_ROBIN,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCOPY INTO [dbo].[tblEmployee]\n( empID 1, empName 2, salary 3,dep 4)\nFROM 'https://abhisheksynapsedlgen2.dfs.core.windows.net/synapsedemo/employees.csv'\nWITH\n(\n    FILE_TYPE = 'CSV',\n    MAXERRORS = 0,\n    IDENTITY_INSERT = 'OFF'\n)\n\nSELECT * FROM [dbo].[tblEmployee]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "abhishekdedicatedpool",
+				"poolName": "abhishekdedicatedpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
