@@ -161,7 +161,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Notebook 1')]",
+			"name": "[concat(parameters('workspaceName'), '/readDataPyspark')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -181,7 +181,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "06f53612-c203-4751-b9bd-910385a9c4c8"
+						"spark.autotune.trackingId": "8f083d86-856c-4784-a9d8-5a7530ecd40a"
 					}
 				},
 				"metadata": {
