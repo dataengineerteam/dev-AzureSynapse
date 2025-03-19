@@ -1,0 +1,84 @@
+{
+	"name": "write_parquet_csv_files_pyspark",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkPlAbhishek",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "55a6bd13-5a06-4dc6-9275-dbd52c65a117"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/b39676f8-5e58-4fa3-a245-c9a69d0a4c53/resourceGroups/abhishekRG/providers/Microsoft.Synapse/workspaces/abhishek-synapsews/bigDataPools/sparkPlAbhishek",
+				"name": "sparkPlAbhishek",
+				"type": "Spark",
+				"endpoint": "https://abhishek-synapsews.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkPlAbhishek",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"df = spark.read.format('CSV').option('header',True).load('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/tblEmployee.csv')\n",
+					"df.write.mode('overwrite').saveAsTable('tblEmployee')"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"empDF = spark.sql('select * from tblEmployee')"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"\n",
+					"empDF.write.format('parquet').mode('overwrite').save('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/EmployeeInfo/parquet/')\n",
+					"empDF.write.format('csv').mode('overwrite').save('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/EmployeeInfo/CSV/')"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
