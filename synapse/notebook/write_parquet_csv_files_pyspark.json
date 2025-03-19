@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "55a6bd13-5a06-4dc6-9275-dbd52c65a117"
+				"spark.autotune.trackingId": "62926590-b8cf-41ac-bc70-69fcdd75643c"
 			}
 		},
 		"metadata": {
@@ -54,14 +54,14 @@
 					"df = spark.read.format('CSV').option('header',True).load('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/tblEmployee.csv')\n",
 					"df.write.mode('overwrite').saveAsTable('tblEmployee')"
 				],
-				"execution_count": 3
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"empDF = spark.sql('select * from tblEmployee')"
 				],
-				"execution_count": 4
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -70,7 +70,20 @@
 					"empDF.write.format('parquet').mode('overwrite').save('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/EmployeeInfo/parquet/')\n",
 					"empDF.write.format('csv').mode('overwrite').save('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/EmployeeInfo/CSV/')"
 				],
-				"execution_count": 5
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "sparksql"
+					}
+				},
+				"source": [
+					"%%sql\n",
+					"SELECT * from tblemployee;"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
