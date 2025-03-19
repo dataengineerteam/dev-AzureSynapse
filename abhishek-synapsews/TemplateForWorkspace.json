@@ -125,7 +125,7 @@
 					"name": "serverless"
 				},
 				"content": {
-					"query": "SELECT dep, SUM(salary) as totalSalary \nFROM OPENROWSET(\n    BULK 'https://abhisheksynapsedlgen2.dfs.core.windows.net/synapsedemo/employees.csv',\n    FORMAT = 'CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION='2.0'\n) AS [result]\nGROUP BY dep\n\n\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://abhisheksynapsedlgen2.dfs.core.windows.net/synapsedemo/employees.csv',\n    FORMAT = 'CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION='2.0'\n) AS [result]\n",
+					"query": "SELECT dep, SUM(salary) as totalSalary \nFROM OPENROWSET(\n    BULK 'https://abhisheksynapsedlgen2.dfs.core.windows.net/synapsedemo/employees.csv',\n    FORMAT = 'CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION='2.0'\n) AS [result]\nGROUP BY dep\n\n\nSELECT *\nFROM OPENROWSET(\n    BULK 'https://abhisheksynapsedlgen2.dfs.core.windows.net/synapsedemo/employees.csv',\n    FORMAT = 'CSV',\n    HEADER_ROW = TRUE,\n    PARSER_VERSION='2.0'\n) AS [result]\n\n\n",
 					"metadata": {
 						"language": "sql"
 					},
@@ -136,27 +136,6 @@
 					"resultLimit": 5000
 				},
 				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/dedicatedsqlpool')]",
-			"type": "Microsoft.Synapse/workspaces/sqlPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"collation": "SQL_Latin1_General_CP1_CI_AS",
-				"maxSizeBytes": 263882790666240,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "eastus2"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/sparkPlAbhishek')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -181,7 +160,110 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "3d6f7b9f-4dc0-4f4b-9b9e-1793f871f7e2"
+						"spark.autotune.trackingId": "c161d7df-7d53-4f91-9788-29f6eabeb06d"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/b39676f8-5e58-4fa3-a245-c9a69d0a4c53/resourceGroups/abhishekRG/providers/Microsoft.Synapse/workspaces/abhishek-synapsews/bigDataPools/sparkPlAbhishek",
+						"name": "sparkPlAbhishek",
+						"type": "Spark",
+						"endpoint": "https://abhishek-synapsews.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkPlAbhishek",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.4",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"source": [
+							"df = spark.read.format('csv').option('inferSchema',True).option('header',True).load('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/employees.csv')"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"df.show(truncate=False)"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"df.write.mode('overwrite').saveAsTable('tblEmployee')"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\n",
+							"\n",
+							"select * from tblEmployee;"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/write_parquet_csv_files_pyspark')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "sparkPlAbhishek",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "60a5ff3e-fefd-4ff2-9aa2-c07f9e86f4bf"
 					}
 				},
 				"metadata": {
@@ -216,16 +298,8 @@
 						"cell_type": "code",
 						"metadata": {},
 						"source": [
-							"df = spark.read.format('csv').option('inferSchema',True).option('header',True).load('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/employees.csv')"
-						],
-						"outputs": [],
-						"execution_count": 2
-					},
-					{
-						"cell_type": "code",
-						"metadata": {},
-						"source": [
-							"df.show(truncate=False)"
+							"df = spark.read.format('CSV').option('header',True).load('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/tblEmployee.csv')\n",
+							"df.write.mode('overwrite').saveAsTable('tblEmployee')"
 						],
 						"outputs": [],
 						"execution_count": 3
@@ -234,26 +308,21 @@
 						"cell_type": "code",
 						"metadata": {},
 						"source": [
-							"df.write.mode('overwrite').saveAsTable('tblEmployee')"
+							"empDF = spark.sql('select * from tblEmployee')"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
-						"metadata": {
-							"microsoft": {
-								"language": "sparksql"
-							},
-							"collapsed": false
-						},
+						"metadata": {},
 						"source": [
-							"%%sql\n",
 							"\n",
-							"select * from tblEmployee;"
+							"empDF.write.format('parquet').mode('overwrite').save('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/EmployeeInfo/parquet/')\n",
+							"empDF.write.format('csv').mode('overwrite').save('abfss://synapsedemo@abhisheksynapsedlgen2.dfs.core.windows.net/EmployeeInfo/CSV/')"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -267,6 +336,43 @@
 				]
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/sparkPlAbhishek')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": false,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 3,
+					"minNodeCount": 3
+				},
+				"nodeCount": 10,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.4",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus2"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dedicatedsqlpool')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus2"
 		}
 	]
 }
